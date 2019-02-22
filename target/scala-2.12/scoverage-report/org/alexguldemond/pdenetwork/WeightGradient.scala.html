@@ -1,0 +1,1090 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          org/alexguldemond/pdenetwork/WeightGradient.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package org.alexguldemond.pdenetwork
+</span>2 <span style=''>
+</span>3 <span style=''>import breeze.linalg.{DenseMatrix, DenseVector}
+</span>4 <span style=''>
+</span>5 <span style=''>case class WeightGradient(innerWeightGradient: DenseMatrix[Double],
+</span>6 <span style=''>                          innerBiasGradient: DenseVector[Double],
+</span>7 <span style=''>                          outerWeightGradient: DenseVector[Double]) {
+</span>8 <span style=''>
+</span>9 <span style=''>  def *(scalar: Double) = </span><span style='background: #AEF1AE'>WeightGradient(scalar * innerWeightGradient,
+</span>10 <span style=''></span><span style='background: #AEF1AE'>    scalar * innerBiasGradient, scalar * outerWeightGradient)</span><span style=''>
+</span>11 <span style=''>
+</span>12 <span style=''>  def :*=(scalar: Double): WeightGradient = {
+</span>13 <span style=''>    </span><span style='background: #AEF1AE'>innerWeightGradient :*= scalar</span><span style=''>
+</span>14 <span style=''>    </span><span style='background: #AEF1AE'>innerBiasGradient :*= scalar</span><span style=''>
+</span>15 <span style=''>    </span><span style='background: #AEF1AE'>outerWeightGradient :*= scalar</span><span style=''>
+</span>16 <span style=''>    this
+</span>17 <span style=''>  }
+</span>18 <span style=''>
+</span>19 <span style=''>  def /(scalar: Double) = </span><span style='background: #F0ADAD'>WeightGradient(innerWeightGradient/scalar,
+</span>20 <span style=''></span><span style='background: #F0ADAD'>    innerBiasGradient/scalar, outerWeightGradient/scalar)</span><span style=''>
+</span>21 <span style=''>
+</span>22 <span style=''>  def :/=(scalar: Double): WeightGradient = {
+</span>23 <span style=''>    </span><span style='background: #F0ADAD'>innerWeightGradient :/= scalar</span><span style=''>
+</span>24 <span style=''>    </span><span style='background: #F0ADAD'>innerBiasGradient :/= scalar</span><span style=''>
+</span>25 <span style=''>    </span><span style='background: #F0ADAD'>outerWeightGradient :/= scalar</span><span style=''>
+</span>26 <span style=''>    this
+</span>27 <span style=''>  }
+</span>28 <span style=''>
+</span>29 <span style=''>  def +(other: WeightGradient): WeightGradient =
+</span>30 <span style=''>    </span><span style='background: #AEF1AE'>WeightGradient(innerWeightGradient + other.innerWeightGradient,
+</span>31 <span style=''></span><span style='background: #AEF1AE'>      innerBiasGradient + other.innerBiasGradient,
+</span>32 <span style=''></span><span style='background: #AEF1AE'>      outerWeightGradient + other.outerWeightGradient)</span><span style=''>
+</span>33 <span style=''>
+</span>34 <span style=''>  def :+=(other: WeightGradient): WeightGradient = {
+</span>35 <span style=''>    </span><span style='background: #F0ADAD'>innerWeightGradient :+= other.innerWeightGradient</span><span style=''>
+</span>36 <span style=''>    </span><span style='background: #F0ADAD'>innerBiasGradient :+= other.innerBiasGradient</span><span style=''>
+</span>37 <span style=''>    </span><span style='background: #F0ADAD'>outerWeightGradient :+= other.outerWeightGradient</span><span style=''>
+</span>38 <span style=''>    this
+</span>39 <span style=''>  }
+</span>40 <span style=''>
+</span>41 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          9
+        </td>
+        <td>
+          828
+        </td>
+        <td>
+          318
+          -
+          424
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.apply
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.apply(linalg.this.`package`.InjectNumericOps[Double](scalar).*[Double, breeze.linalg.DenseMatrix[Double], breeze.linalg.DenseMatrix[Double]](WeightGradient.this.innerWeightGradient)(linalg.this.DenseMatrix.s_dm_op_Double_OpMulMatrix), linalg.this.`package`.InjectNumericOps[Double](scalar).*[Double, breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double]](WeightGradient.this.innerBiasGradient)(linalg.this.DenseVector.s_dv_Op_Double_OpMulMatrix), linalg.this.`package`.InjectNumericOps[Double](scalar).*[Double, breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double]](WeightGradient.this.outerWeightGradient)(linalg.this.DenseVector.s_dv_Op_Double_OpMulMatrix))
+        </td>
+      </tr><tr>
+        <td>
+          9
+        </td>
+        <td>
+          819
+        </td>
+        <td>
+          342
+          -
+          361
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.innerWeightGradient
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.this.innerWeightGradient
+        </td>
+      </tr><tr>
+        <td>
+          9
+        </td>
+        <td>
+          821
+        </td>
+        <td>
+          333
+          -
+          361
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.ImmutableNumericOps.*
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.`package`.InjectNumericOps[Double](scalar).*[Double, breeze.linalg.DenseMatrix[Double], breeze.linalg.DenseMatrix[Double]](WeightGradient.this.innerWeightGradient)(linalg.this.DenseMatrix.s_dm_op_Double_OpMulMatrix)
+        </td>
+      </tr><tr>
+        <td>
+          9
+        </td>
+        <td>
+          820
+        </td>
+        <td>
+          340
+          -
+          340
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseMatrixOps.s_dm_op_Double_OpMulMatrix
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.DenseMatrix.s_dm_op_Double_OpMulMatrix
+        </td>
+      </tr><tr>
+        <td>
+          10
+        </td>
+        <td>
+          822
+        </td>
+        <td>
+          376
+          -
+          393
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.innerBiasGradient
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.this.innerBiasGradient
+        </td>
+      </tr><tr>
+        <td>
+          10
+        </td>
+        <td>
+          824
+        </td>
+        <td>
+          367
+          -
+          393
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.ImmutableNumericOps.*
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.`package`.InjectNumericOps[Double](scalar).*[Double, breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double]](WeightGradient.this.innerBiasGradient)(linalg.this.DenseVector.s_dv_Op_Double_OpMulMatrix)
+        </td>
+      </tr><tr>
+        <td>
+          10
+        </td>
+        <td>
+          827
+        </td>
+        <td>
+          395
+          -
+          423
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.ImmutableNumericOps.*
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.`package`.InjectNumericOps[Double](scalar).*[Double, breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double]](WeightGradient.this.outerWeightGradient)(linalg.this.DenseVector.s_dv_Op_Double_OpMulMatrix)
+        </td>
+      </tr><tr>
+        <td>
+          10
+        </td>
+        <td>
+          826
+        </td>
+        <td>
+          402
+          -
+          402
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseVectorOps.s_dv_Op_Double_OpMulMatrix
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.DenseVector.s_dv_Op_Double_OpMulMatrix
+        </td>
+      </tr><tr>
+        <td>
+          10
+        </td>
+        <td>
+          823
+        </td>
+        <td>
+          374
+          -
+          374
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseVectorOps.s_dv_Op_Double_OpMulMatrix
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.DenseVector.s_dv_Op_Double_OpMulMatrix
+        </td>
+      </tr><tr>
+        <td>
+          10
+        </td>
+        <td>
+          825
+        </td>
+        <td>
+          404
+          -
+          423
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.outerWeightGradient
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.this.outerWeightGradient
+        </td>
+      </tr><tr>
+        <td>
+          13
+        </td>
+        <td>
+          830
+        </td>
+        <td>
+          476
+          -
+          506
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.:*=
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.this.innerWeightGradient.:*=[breeze.linalg.DenseMatrix[Double], Double](scalar)(linalg.this.DenseMatrix.dm_s_UpdateOp_Double_OpMulScalar)
+        </td>
+      </tr><tr>
+        <td>
+          13
+        </td>
+        <td>
+          829
+        </td>
+        <td>
+          496
+          -
+          496
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseMatrixOps.dm_s_UpdateOp_Double_OpMulScalar
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.DenseMatrix.dm_s_UpdateOp_Double_OpMulScalar
+        </td>
+      </tr><tr>
+        <td>
+          14
+        </td>
+        <td>
+          831
+        </td>
+        <td>
+          529
+          -
+          529
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseVectorOps.dv_s_UpdateOp_Double_OpMulScalar
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.DenseVector.dv_s_UpdateOp_Double_OpMulScalar
+        </td>
+      </tr><tr>
+        <td>
+          14
+        </td>
+        <td>
+          832
+        </td>
+        <td>
+          511
+          -
+          539
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.:*=
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.this.innerBiasGradient.:*=[breeze.linalg.DenseVector[Double], Double](scalar)(linalg.this.DenseVector.dv_s_UpdateOp_Double_OpMulScalar)
+        </td>
+      </tr><tr>
+        <td>
+          15
+        </td>
+        <td>
+          833
+        </td>
+        <td>
+          564
+          -
+          564
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseVectorOps.dv_s_UpdateOp_Double_OpMulScalar
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.DenseVector.dv_s_UpdateOp_Double_OpMulScalar
+        </td>
+      </tr><tr>
+        <td>
+          15
+        </td>
+        <td>
+          834
+        </td>
+        <td>
+          544
+          -
+          574
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.:*=
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.this.outerWeightGradient.:*=[breeze.linalg.DenseVector[Double], Double](scalar)(linalg.this.DenseVector.dv_s_UpdateOp_Double_OpMulScalar)
+        </td>
+      </tr><tr>
+        <td>
+          19
+        </td>
+        <td>
+          836
+        </td>
+        <td>
+          630
+          -
+          656
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.ImmutableNumericOps./
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.this.innerWeightGradient./[breeze.linalg.DenseMatrix[Double], Double, breeze.linalg.DenseMatrix[Double]](scalar)(linalg.this.DenseMatrix.op_DM_S_Double_OpDiv)
+        </td>
+      </tr><tr>
+        <td>
+          19
+        </td>
+        <td>
+          835
+        </td>
+        <td>
+          649
+          -
+          649
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseMatrixOps.op_DM_S_Double_OpDiv
+        </td>
+        <td style="background: #F0ADAD">
+          linalg.this.DenseMatrix.op_DM_S_Double_OpDiv
+        </td>
+      </tr><tr>
+        <td>
+          19
+        </td>
+        <td>
+          841
+        </td>
+        <td>
+          615
+          -
+          715
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.apply
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.apply(WeightGradient.this.innerWeightGradient./[breeze.linalg.DenseMatrix[Double], Double, breeze.linalg.DenseMatrix[Double]](scalar)(linalg.this.DenseMatrix.op_DM_S_Double_OpDiv), WeightGradient.this.innerBiasGradient./[breeze.linalg.DenseVector[Double], Double, breeze.linalg.DenseVector[Double]](scalar)(linalg.this.DenseVector.dv_s_Op_Double_OpDiv), WeightGradient.this.outerWeightGradient./[breeze.linalg.DenseVector[Double], Double, breeze.linalg.DenseVector[Double]](scalar)(linalg.this.DenseVector.dv_s_Op_Double_OpDiv))
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          837
+        </td>
+        <td>
+          679
+          -
+          679
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseVectorOps.dv_s_Op_Double_OpDiv
+        </td>
+        <td style="background: #F0ADAD">
+          linalg.this.DenseVector.dv_s_Op_Double_OpDiv
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          839
+        </td>
+        <td>
+          707
+          -
+          707
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseVectorOps.dv_s_Op_Double_OpDiv
+        </td>
+        <td style="background: #F0ADAD">
+          linalg.this.DenseVector.dv_s_Op_Double_OpDiv
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          838
+        </td>
+        <td>
+          662
+          -
+          686
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.ImmutableNumericOps./
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.this.innerBiasGradient./[breeze.linalg.DenseVector[Double], Double, breeze.linalg.DenseVector[Double]](scalar)(linalg.this.DenseVector.dv_s_Op_Double_OpDiv)
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          840
+        </td>
+        <td>
+          688
+          -
+          714
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.ImmutableNumericOps./
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.this.outerWeightGradient./[breeze.linalg.DenseVector[Double], Double, breeze.linalg.DenseVector[Double]](scalar)(linalg.this.DenseVector.dv_s_Op_Double_OpDiv)
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          842
+        </td>
+        <td>
+          787
+          -
+          787
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseMatrixOps.dm_s_UpdateOp_Double_OpDiv
+        </td>
+        <td style="background: #F0ADAD">
+          linalg.this.DenseMatrix.dm_s_UpdateOp_Double_OpDiv
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          843
+        </td>
+        <td>
+          767
+          -
+          797
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.:/=
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.this.innerWeightGradient.:/=[breeze.linalg.DenseMatrix[Double], Double](scalar)(linalg.this.DenseMatrix.dm_s_UpdateOp_Double_OpDiv)
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          845
+        </td>
+        <td>
+          802
+          -
+          830
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.:/=
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.this.innerBiasGradient.:/=[breeze.linalg.DenseVector[Double], Double](scalar)(linalg.this.DenseVector.dv_s_UpdateOp_Double_OpDiv)
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          844
+        </td>
+        <td>
+          820
+          -
+          820
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseVectorOps.dv_s_UpdateOp_Double_OpDiv
+        </td>
+        <td style="background: #F0ADAD">
+          linalg.this.DenseVector.dv_s_UpdateOp_Double_OpDiv
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          846
+        </td>
+        <td>
+          855
+          -
+          855
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseVectorOps.dv_s_UpdateOp_Double_OpDiv
+        </td>
+        <td style="background: #F0ADAD">
+          linalg.this.DenseVector.dv_s_UpdateOp_Double_OpDiv
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          847
+        </td>
+        <td>
+          835
+          -
+          865
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.:/=
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.this.outerWeightGradient.:/=[breeze.linalg.DenseVector[Double], Double](scalar)(linalg.this.DenseVector.dv_s_UpdateOp_Double_OpDiv)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          857
+        </td>
+        <td>
+          933
+          -
+          1102
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.apply
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.apply(WeightGradient.this.innerWeightGradient.+[breeze.linalg.DenseMatrix[Double], breeze.linalg.DenseMatrix[Double], Nothing, breeze.linalg.DenseMatrix[Double]](other.innerWeightGradient)(linalg.this.DenseMatrix.op_DM_DM_Double_OpAdd), WeightGradient.this.innerBiasGradient.+[breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double], Nothing, breeze.linalg.DenseVector[Double]](other.innerBiasGradient)(linalg.this.DenseVector.canAddD), WeightGradient.this.outerWeightGradient.+[breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double], Nothing, breeze.linalg.DenseVector[Double]](other.outerWeightGradient)(linalg.this.DenseVector.canAddD))
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          848
+        </td>
+        <td>
+          970
+          -
+          995
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.innerWeightGradient
+        </td>
+        <td style="background: #AEF1AE">
+          other.innerWeightGradient
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          850
+        </td>
+        <td>
+          948
+          -
+          995
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.+
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.this.innerWeightGradient.+[breeze.linalg.DenseMatrix[Double], breeze.linalg.DenseMatrix[Double], Nothing, breeze.linalg.DenseMatrix[Double]](other.innerWeightGradient)(linalg.this.DenseMatrix.op_DM_DM_Double_OpAdd)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          849
+        </td>
+        <td>
+          968
+          -
+          968
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseMatrixOps.op_DM_DM_Double_OpAdd
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.DenseMatrix.op_DM_DM_Double_OpAdd
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          851
+        </td>
+        <td>
+          1023
+          -
+          1046
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.innerBiasGradient
+        </td>
+        <td style="background: #AEF1AE">
+          other.innerBiasGradient
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          853
+        </td>
+        <td>
+          1003
+          -
+          1046
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.+
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.this.innerBiasGradient.+[breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double], Nothing, breeze.linalg.DenseVector[Double]](other.innerBiasGradient)(linalg.this.DenseVector.canAddD)
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          852
+        </td>
+        <td>
+          1021
+          -
+          1021
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.DenseVector.canAddD
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.DenseVector.canAddD
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          855
+        </td>
+        <td>
+          1074
+          -
+          1074
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.DenseVector.canAddD
+        </td>
+        <td style="background: #AEF1AE">
+          linalg.this.DenseVector.canAddD
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          854
+        </td>
+        <td>
+          1076
+          -
+          1101
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.outerWeightGradient
+        </td>
+        <td style="background: #AEF1AE">
+          other.outerWeightGradient
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          856
+        </td>
+        <td>
+          1054
+          -
+          1101
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.+
+        </td>
+        <td style="background: #AEF1AE">
+          WeightGradient.this.outerWeightGradient.+[breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double], Nothing, breeze.linalg.DenseVector[Double]](other.outerWeightGradient)(linalg.this.DenseVector.canAddD)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          860
+        </td>
+        <td>
+          1161
+          -
+          1210
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.:+=
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.this.innerWeightGradient.:+=[breeze.linalg.DenseMatrix[Double], breeze.linalg.DenseMatrix[Double]](other.innerWeightGradient)(linalg.this.DenseMatrix.dm_dm_UpdateOp_Double_OpAdd)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          859
+        </td>
+        <td>
+          1181
+          -
+          1181
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.operators.DenseMatrixOps.dm_dm_UpdateOp_Double_OpAdd
+        </td>
+        <td style="background: #F0ADAD">
+          linalg.this.DenseMatrix.dm_dm_UpdateOp_Double_OpAdd
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          858
+        </td>
+        <td>
+          1185
+          -
+          1210
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.innerWeightGradient
+        </td>
+        <td style="background: #F0ADAD">
+          other.innerWeightGradient
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          863
+        </td>
+        <td>
+          1215
+          -
+          1260
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.:+=
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.this.innerBiasGradient.:+=[breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double]](other.innerBiasGradient)(linalg.this.DenseVector.canAddIntoD)
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          862
+        </td>
+        <td>
+          1233
+          -
+          1233
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.DenseVector.canAddIntoD
+        </td>
+        <td style="background: #F0ADAD">
+          linalg.this.DenseVector.canAddIntoD
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          861
+        </td>
+        <td>
+          1237
+          -
+          1260
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.innerBiasGradient
+        </td>
+        <td style="background: #F0ADAD">
+          other.innerBiasGradient
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          864
+        </td>
+        <td>
+          1289
+          -
+          1314
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.alexguldemond.pdenetwork.WeightGradient.outerWeightGradient
+        </td>
+        <td style="background: #F0ADAD">
+          other.outerWeightGradient
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          866
+        </td>
+        <td>
+          1265
+          -
+          1314
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          breeze.linalg.NumericOps.:+=
+        </td>
+        <td style="background: #F0ADAD">
+          WeightGradient.this.outerWeightGradient.:+=[breeze.linalg.DenseVector[Double], breeze.linalg.DenseVector[Double]](other.outerWeightGradient)(linalg.this.DenseVector.canAddIntoD)
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          865
+        </td>
+        <td>
+          1285
+          -
+          1285
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          breeze.linalg.DenseVector.canAddIntoD
+        </td>
+        <td style="background: #F0ADAD">
+          linalg.this.DenseVector.canAddIntoD
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

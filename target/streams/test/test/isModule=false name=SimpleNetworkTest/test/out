@@ -1,0 +1,5 @@
+[0m[[0m[0minfo[0m] [0m[0m[32mSimpleNetworkTest:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mA simple network[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should compute preoutputs correctly[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should apply correctly[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should compute weight gradients correctly[0m[0m
