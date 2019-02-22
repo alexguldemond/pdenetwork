@@ -1,6 +1,0 @@
-[0m[[0m[0minfo[0m] [0m[0m[32mSimpleLaplacianModelTest:[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32mA SimpleLaplacianModel[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should apply correctly[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should calculate laplacian correctly[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should calculate costs correctly[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should calculate weight gradients correctly[0m[0m
