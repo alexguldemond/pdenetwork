@@ -12,3 +12,5 @@ case class MultiIndex(values: Seq[Int]) {
 
   def asVector = DenseVector(values.map( _.toDouble).toArray)
 }
+
+

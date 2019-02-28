@@ -46,7 +46,7 @@ case class SimpleNetwork(innerWeights: DenseMatrix[Double], innerBias: DenseVect
 
   override def inputDerivative(multiIndex: MultiIndex): NetworkDerivative = SimpleDerivative(this, multiIndex)
 
-  override def updateWeights(weightGradient: WeightGradient): SimpleNetwork = {
+  override def updateWeights(weightGradient: WeightGradient): Network = {
     innerWeights :+= weightGradient.innerWeightGradient
     innerBias :+= weightGradient.innerBiasGradient
     outerWeights :+= weightGradient.outerWeightGradient

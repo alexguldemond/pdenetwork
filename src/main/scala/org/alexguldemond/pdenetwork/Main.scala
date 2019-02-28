@@ -1,77 +1,31 @@
 package org.alexguldemond.pdenetwork
 
-import breeze.linalg._
-import breeze.numerics.constants.Pi
-import breeze.numerics.{exp, sin}
-import org.jzy3d.chart._
-import org.jzy3d.colors.{Color, ColorMapper}
-import org.jzy3d.colors.colormaps.ColorMapRainbow
-import org.jzy3d.maths.Range
-import org.jzy3d.plot3d.builder.{Builder, Mapper}
-import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid
-import org.jzy3d.plot3d.rendering.canvas.Quality
+import org.alexguldemond.pdenetwork.Jzy3dPlotting._
+import BreezePlotting._
+import org.alexguldemond.pdenetwork.Plot._
+
+import scala.collection.mutable.ListBuffer
 
 object Main extends App {
 
-  val mesh = Uniform2DMesh(.2)
-  val model = SimpleLaplacianModel.randomModel(5, 3)
+  val mesh = Uniform2DMesh(.02)
+  val model: SimpleLaplacianModel = SimpleLaplacianModel.randomModel(10)
 
-  val epochs = 2
+  val epochs = 15
   val batchSize = 10
+  val reportFrequency = 5
+  var report: ListBuffer[Double] = ListBuffer[Double]()
 
   time {
     for (i <- 1 to epochs) {
       val iter = mesh.iterator(batchSize)
-      model.fit(iter)
+      report ++= model.fit(iter, reportFrequency, SGDUpdater(learningRate = .01))
       println(s"Epoch $i complete")
     }
   }
 
-  // Define a function to plot
-  val exact = new Mapper() {
-    def f(x1: Double, x2: Double) =1d/(exp(Pi) - exp(-Pi)) * sin(Pi*x1) * ((exp(Pi*x2) - exp(-Pi * x2)))
-  }
-
-  val approx = new Mapper() {
-    def f(x1: Double, x2: Double) = model(DenseVector(x1,x2))
-  }
-
-  // Define range and precision for the function to plot
-  val range = new Range(0, 1)
-  val steps = 50
-
-  // Create a surface drawing that function
-  val exactSurface =
-    Builder.buildOrthonormal(new OrthonormalGrid(range, steps), exact)
-  exactSurface.setColorMapper(
-    new ColorMapper(new ColorMapRainbow(),
-      exactSurface.getBounds().getZmin(),
-      exactSurface.getBounds().getZmax(),
-      new Color(1, 1, 1, .5f)))
-  exactSurface.setFaceDisplayed(true)
-  exactSurface.setWireframeDisplayed(false)
-  exactSurface.setWireframeColor(Color.BLACK)
-
-  val approxSurface =
-    Builder.buildOrthonormal(new OrthonormalGrid(range, steps), approx)
-  approxSurface.setColorMapper(
-    new ColorMapper(new ColorMapRainbow(),
-      approxSurface.getBounds().getZmin(),
-      approxSurface.getBounds().getZmax(),
-      new Color(1, 1, 1, .5f)))
-  approxSurface.setFaceDisplayed(true)
-  approxSurface.setWireframeDisplayed(false)
-  approxSurface.setWireframeColor(Color.BLACK)
-
-  // Create a chart and add the surface
-  val exactPlot = new AWTChart(Quality.Advanced)
-  exactPlot.add(exactSurface)
-  exactPlot.open("Exact Solution", 600, 600)
-
-  val approxPlot = new AWTChart(Quality.Advanced)
-  approxPlot.add(approxSurface)
-  approxPlot.open("Approx Solution", 600, 600)
-
+  model.plot("Approximate Solution to u_xx + uyy = 0")
+  report.toList.plot("Error")
 
   def time[R](block: => R): R = {
     val t0 = System.nanoTime()
