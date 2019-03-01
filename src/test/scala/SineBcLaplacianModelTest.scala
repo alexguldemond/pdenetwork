@@ -1,10 +1,10 @@
 import breeze.linalg.{DenseMatrix, DenseVector, sum}
-import breeze.numerics.sin
 import breeze.numerics.constants.Pi
-import org.alexguldemond.pdenetwork.{SimpleLaplacianModel, SimpleNetwork, WeightGradient}
+import breeze.numerics.sin
+import org.alexguldemond.pdenetwork.{SimpleNetwork, SineBcLaplacianModel, WeightGradient}
 import org.scalatest.{FlatSpec, Matchers}
 
-class SimpleLaplacianModelTest extends FlatSpec with Matchers {
+class SineBcLaplacianModelTest extends FlatSpec with Matchers {
 
   "A SimpleLaplacianModel" should "apply correctly" in {
     val w = DenseMatrix((1d,.5),(.25, .75))
@@ -16,7 +16,7 @@ class SimpleLaplacianModelTest extends FlatSpec with Matchers {
 
     val result = 3d * sin(Pi * 2d) + 2d*(2d - 1d)*3d*(3d - 1d) * net(x)
 
-    val model = SimpleLaplacianModel(net)
+    val model = SineBcLaplacianModel(net)
     model(x) should be (result)
 
   }
@@ -31,7 +31,7 @@ class SimpleLaplacianModelTest extends FlatSpec with Matchers {
     val x2 = DenseVector(3d,2d)
     val x = DenseMatrix(x1,x2).t
 
-    val model = SimpleLaplacianModel(net)
+    val model = SineBcLaplacianModel(net)
     val result = DenseVector(20.248680491572003, 20.21034960445042).t
 
     model.diffOp(x1) should be (result(0))
@@ -50,7 +50,7 @@ class SimpleLaplacianModelTest extends FlatSpec with Matchers {
     val x2 = DenseVector(3d,2d)
     val x = DenseMatrix(x1,x2).t
 
-    val model = SimpleLaplacianModel(net)
+    val model = SineBcLaplacianModel(net)
 
     model.cost(x2) should be (204.22911556705463)
     model.cost(x1) should be (205.0045308248843)
@@ -67,7 +67,7 @@ class SimpleLaplacianModelTest extends FlatSpec with Matchers {
     val x2 = DenseVector(3d,4d)
     val x = DenseMatrix(x1,x2).t
 
-    val model = SimpleLaplacianModel(net)
+    val model = SineBcLaplacianModel(net)
     val grad1 = model.costGradient(x1)
     val grad2 = model.costGradient(x2)
     val grad = model.costGradientBatch(x)

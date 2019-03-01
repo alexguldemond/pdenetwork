@@ -1,0 +1,26 @@
+package org.alexguldemond.pdenetwork
+import breeze.linalg.{DenseMatrix, DenseVector, Transpose}
+import breeze.numerics.sin
+import breeze.numerics.constants.Pi
+
+case class SineBcLaplacianModel(simpleNetwork: SimpleNetwork) extends SimpleLaplacianModel(simpleNetwork) {
+  import SineBcLaplacianModel._
+
+  override def bcSatisfier(input: DenseVector[Double]): Double = {
+    val x1 = input(0)
+    val x2 = input(1)
+    x2*sin(Pi * x1)
+  }
+
+  override def diffOpBcSatisfier(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] = {
+    val x1 = input(0,::)
+    val x2 = input(1,::)
+    x2 *:* sin(x1*Pi)*minusPiSquared
+  }
+
+  override def data(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] = DenseVector.zeros[Double](input.cols).t
+}
+
+object SineBcLaplacianModel {
+  lazy val minusPiSquared = -Pi*Pi
+}
