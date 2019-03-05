@@ -1,4 +1,4 @@
-import org.alexguldemond.pdenetwork.Uniform2DMesh
+import org.alexguldemond.pdenetwork.mesh.Uniform2DMesh
 import org.scalatest.{FlatSpec, Matchers}
 
 class Uniform2DMeshTest extends FlatSpec with Matchers {

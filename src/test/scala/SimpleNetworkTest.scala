@@ -1,7 +1,7 @@
 import breeze.linalg.{DenseMatrix, DenseVector}
 import breeze.numerics.sigmoid
-import org.alexguldemond.pdenetwork.SigmoidDerivatives.sigmoidFirstDerivative
-import org.alexguldemond.pdenetwork.{SimpleNetwork, WeightGradient, WeightGradientBatch}
+import org.alexguldemond.pdenetwork.activation.SigmoidDerivatives.sigmoidFirstDerivative
+import org.alexguldemond.pdenetwork.network.{SimpleNetwork, WeightGradientBatch, WeightVector}
 import org.scalatest.{FlatSpec, Matchers}
 
 class SimpleNetworkTest extends FlatSpec with Matchers {
@@ -11,7 +11,7 @@ class SimpleNetworkTest extends FlatSpec with Matchers {
     val b = DenseVector(.6,.3)
     val v = DenseVector(1d, .25)
 
-    val net = SimpleNetwork(w,b,v)
+    val net = SimpleNetwork(WeightVector(w,b,v))
     val x1 = DenseVector(1d,2d)
     val x2 = DenseVector(1d,.5)
     val x = DenseMatrix(x1,x2).t
@@ -30,7 +30,7 @@ class SimpleNetworkTest extends FlatSpec with Matchers {
     val b = DenseVector(.6,.3)
     val v = DenseVector(1d, .25)
 
-    val net = SimpleNetwork(w,b,v)
+    val net = SimpleNetwork(WeightVector(w,b,v))
     val x1 = DenseVector(1d,2d)
     val x2 = DenseVector(1d,.5)
     val x = DenseMatrix(x1,x2).t
@@ -53,7 +53,7 @@ class SimpleNetworkTest extends FlatSpec with Matchers {
     val b = DenseVector(.6,.3)
     val v = DenseVector(1d, .25)
 
-    val net = SimpleNetwork(w,b,v)
+    val net = SimpleNetwork(WeightVector(w,b,v))
     val x1 = DenseVector(1d,2d)
     val x2 = DenseVector(1d,.5)
     val x = DenseMatrix(x1,x2).t
@@ -61,17 +61,17 @@ class SimpleNetworkTest extends FlatSpec with Matchers {
     val x1Pre = net.hiddenPreOutput(x1)
     val x2Pre = net.hiddenPreOutput(x2)
 
-    val x1Grad = WeightGradient((v *:* sigmoidFirstDerivative(x1Pre)) * x1.t,
+    val x1Grad = WeightVector((v *:* sigmoidFirstDerivative(x1Pre)) * x1.t,
       v *:* sigmoidFirstDerivative(x1Pre),
       sigmoid(x1Pre))
 
-    val x2Grad = WeightGradient((v *:* sigmoidFirstDerivative(x2Pre)) * x2.t,
+    val x2Grad = WeightVector((v *:* sigmoidFirstDerivative(x2Pre)) * x2.t,
       v *:* sigmoidFirstDerivative(x2Pre),
       sigmoid(x2Pre))
 
-    val xGrad = WeightGradientBatch( Seq(x1Grad.innerWeightGradient, x2Grad.innerWeightGradient),
-      DenseMatrix(x1Grad.innerBiasGradient, x2Grad.innerBiasGradient).t,
-      DenseMatrix(x1Grad.outerWeightGradient, x2Grad.outerWeightGradient).t)
+    val xGrad = WeightGradientBatch( Seq(x1Grad.innerWeights, x2Grad.innerWeights),
+      DenseMatrix(x1Grad.innerBias, x2Grad.innerBias).t,
+      DenseMatrix(x1Grad.outerWeight, x2Grad.outerWeight).t)
 
     net.weightGradient(x1) should be (x1Grad)
     net.weightGradient(x2) should be (x2Grad)

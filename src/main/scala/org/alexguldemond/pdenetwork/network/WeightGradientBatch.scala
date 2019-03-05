@@ -1,4 +1,4 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.network
 
 import breeze.linalg._
 
@@ -8,9 +8,9 @@ case class WeightGradientBatch(innerWeightGradients: Seq[DenseMatrix[Double]],
 
   def length = innerWeightGradients.size
 
-  def apply(i: Int) = WeightGradient(innerWeightGradients(i), innerBiasGradients(::,i), outerWeightGradients(::,i))
+  def apply(i: Int) = WeightVector(innerWeightGradients(i), innerBiasGradients(::,i), outerWeightGradients(::,i))
 
-  def dotSum(vec: DenseVector[Double]): WeightGradient = {
+  def dotSum(vec: DenseVector[Double]): WeightVector = {
 
     val outerWeightSum: DenseVector[Double] = outerWeightGradients(*,::) dot vec
     val innerBiasSum: DenseVector[Double] = innerBiasGradients(*,::) dot vec
@@ -22,10 +22,10 @@ case class WeightGradientBatch(innerWeightGradients: Seq[DenseMatrix[Double]],
       innerWeightSum :+= (scalar * mat)
     }
 
-    WeightGradient(innerWeightSum, innerBiasSum, outerWeightSum)
+    WeightVector(innerWeightSum, innerBiasSum, outerWeightSum)
   }
 
-  def dotSum(vec: Transpose[DenseVector[Double]]): WeightGradient = dotSum(vec.t)
+  def dotSum(vec: Transpose[DenseVector[Double]]): WeightVector = dotSum(vec.t)
 
   def elemProd(vec: DenseVector[Double]): WeightGradientBatch = {
     val outerWeights: DenseMatrix[Double] = outerWeightGradients(*,::) *:* vec

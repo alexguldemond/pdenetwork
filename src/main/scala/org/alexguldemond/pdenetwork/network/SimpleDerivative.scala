@@ -1,6 +1,7 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.network
 
 import breeze.linalg._
+import org.alexguldemond.pdenetwork._
 
 case class SimpleDerivative(simpleNetwork: SimpleNetwork, multiIndex: MultiIndex) extends NetworkDerivative {
   import simpleNetwork.{hiddenPreOutput, hiddenPreOutputBatch}
@@ -31,7 +32,7 @@ case class SimpleDerivative(simpleNetwork: SimpleNetwork, multiIndex: MultiIndex
   override def applyBatch(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] =
     modifiedOuterWeight.t * SimpleNetwork.getDerivative(multiIndex.total, hiddenPreOutputBatch(input))
 
-  override def weightGradient(input: DenseVector[Double]) : WeightGradient = {
+  override def weightGradient(input: DenseVector[Double]) : WeightVector = {
     val preOutput = hiddenPreOutput(input)
 
     val sigma = SimpleNetwork.getDerivative(multiIndex.total, preOutput)
@@ -43,7 +44,7 @@ case class SimpleDerivative(simpleNetwork: SimpleNetwork, multiIndex: MultiIndex
 
     val innerWeightGrad = innerBiasGrad * (input.t) + ((v *:* sigma) * multiIndex.asVector.t) *:* innerWeightGradMod
 
-    WeightGradient(innerWeightGrad, innerBiasGrad, outerWeightGrad)
+    WeightVector(innerWeightGrad, innerBiasGrad, outerWeightGrad)
   }
 
   override def weightGradientBatch(input: DenseMatrix[Double]): WeightGradientBatch = {

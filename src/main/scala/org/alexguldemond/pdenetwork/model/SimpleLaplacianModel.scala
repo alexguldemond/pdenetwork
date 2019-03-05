@@ -1,10 +1,13 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.model
 
 import breeze.linalg._
+import org.alexguldemond.pdenetwork.network.{MultiIndex, NetworkDerivative, SimpleNetwork, WeightVector}
 
 abstract class SimpleLaplacianModel(simpleNetwork: SimpleNetwork) extends SimpleModel {
 
   import SimpleLaplacianModel._
+
+  override def weightVector: WeightVector = simpleNetwork.weightVector
 
   override def derivativeMap: Map[MultiIndex, NetworkDerivative] =
       Map(zeroIndex -> simpleNetwork,
@@ -38,8 +41,13 @@ abstract class SimpleLaplacianModel(simpleNetwork: SimpleNetwork) extends Simple
     bcSatisfier(input) + x1 * (x1 - 1d) * x2 * (x2 - 1d) * simpleNetwork(input)
   }
 
-  override def updateWeights(weightGradient: WeightGradient): Unit = {
+  override def updateWeights(weightGradient: WeightVector): Unit = {
     simpleNetwork.updateWeights(weightGradient)
+  }
+
+  override def updateWeights(weightGradient: DenseVector[Double]): Unit = {
+    simpleNetwork.updateWeights(WeightVector.vecToWeightGrad(weightGradient, simpleNetwork.innerWeights.cols,
+      simpleNetwork.innerWeights.rows))
   }
 
   def bcSatisfier(input: DenseVector[Double]): Double

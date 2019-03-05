@@ -1,5 +1,7 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.model
+
 import breeze.linalg._
+import org.alexguldemond.pdenetwork.network.{MultiIndex, NetworkDerivative, WeightVector}
 
 trait SimpleModel extends Model {
 
@@ -29,7 +31,7 @@ trait SimpleModel extends Model {
 
   }
 
-  override def costGradientBatch(input: DenseMatrix[Double]): WeightGradient = {
+  override def costGradientBatch(input: DenseMatrix[Double]): WeightVector = {
     val derivatives = derivativeMap
     val coefficients = operatorCoefficients(input)
 

@@ -1,25 +1,31 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.network
 
 import breeze.linalg._
 import breeze.numerics._
-import breeze.stats.distributions.Gaussian
-import org.alexguldemond.pdenetwork.SigmoidDerivatives._
+import breeze.stats.distributions.{Gaussian => G}
+import org.alexguldemond.pdenetwork.activation.SigmoidDerivatives._
 
-case class SimpleNetwork(innerWeights: DenseMatrix[Double], innerBias: DenseVector[Double], outerWeights: DenseVector[Double]) extends Network {
+case class SimpleNetwork(weightVector: WeightVector) extends Network {
+
+  def innerWeights = weightVector.innerWeights
+
+  def innerBias = weightVector.innerBias
+
+  def outerWeights = weightVector.outerWeight
 
   override def apply(input: DenseVector[Double]): Double = outerWeights dot sigmoid(hiddenPreOutput(input))
 
   override def applyBatch(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] =
     outerWeights.t * sigmoid(hiddenPreOutputBatch(input))
 
-  override def weightGradient(input: DenseVector[Double]) : WeightGradient = {
+  override def weightGradient(input: DenseVector[Double]) : WeightVector = {
     val preOutput = hiddenPreOutput(input)
 
     val outerWeightGrad = sigmoid(preOutput)
     val innerBiasGrad = outerWeights *:* sigmoidFirstDerivative(preOutput)
     val innerWeightGrad = innerBiasGrad * input.t
 
-    WeightGradient(innerWeightGrad, innerBiasGrad, outerWeightGrad)
+    WeightVector(innerWeightGrad, innerBiasGrad, outerWeightGrad)
   }
 
   override def weightGradientBatch(input: DenseMatrix[Double]): WeightGradientBatch = {
@@ -46,10 +52,10 @@ case class SimpleNetwork(innerWeights: DenseMatrix[Double], innerBias: DenseVect
 
   override def inputDerivative(multiIndex: MultiIndex): NetworkDerivative = SimpleDerivative(this, multiIndex)
 
-  override def updateWeights(weightGradient: WeightGradient): Network = {
-    innerWeights :+= weightGradient.innerWeightGradient
-    innerBias :+= weightGradient.innerBiasGradient
-    outerWeights :+= weightGradient.outerWeightGradient
+  override def updateWeights(weightGradient: WeightVector): Network = {
+    innerWeights :+= weightGradient.innerWeights
+    innerBias :+= weightGradient.innerBias
+    outerWeights :+= weightGradient.outerWeight
     this
   }
 }
@@ -73,11 +79,11 @@ object SimpleNetwork {
     case _ => throw new IllegalArgumentException("Higher derivatives not implemented")
   }
 
-  def randomNetwork(inputSize: Int, hiddenLayerSize: Int): SimpleNetwork = {
-    val normal = Gaussian(0,1)
+  def randomNetwork(inputSize: Int, hiddenLayerSize: Int, testSize: Int = 1): SimpleNetwork = {
+    val normal = G(0,1/sqrt(testSize))
     val w = DenseMatrix.rand(hiddenLayerSize, inputSize, normal)
     val v = DenseVector.rand(hiddenLayerSize, normal)
     val b = DenseVector.rand(hiddenLayerSize, normal)
-    SimpleNetwork(w, b, v)
+    SimpleNetwork(WeightVector(w, b, v))
   }
 }

@@ -1,4 +1,4 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.activation
 
 import breeze.generic.{MappingUFunc, UFunc}
 import breeze.numerics.{exp, pow, sigmoid}

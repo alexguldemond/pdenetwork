@@ -1,7 +1,7 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.plot
 
-import breeze.plot.Figure
-import breeze.plot.{plot => bPlot}
+import breeze.plot.{Figure, plot => bPlot}
+import org.jfree.chart.axis.NumberTickUnit
 
 object BreezePlotting {
 
@@ -18,6 +18,7 @@ object BreezePlotting {
       p += bPlot(list.zipWithIndex.map(_._2.toDouble), list)
       p.xlabel = "Iteration"
       p.ylabel = "Cost"
+      if (list.max <= 1d) p.yaxis.setTickUnit(new NumberTickUnit(.1))
       figure.drawPlots(graphics2D)
     }
   }

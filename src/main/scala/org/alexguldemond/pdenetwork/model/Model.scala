@@ -1,10 +1,15 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.model
 
 import breeze.linalg._
+import org.alexguldemond.pdenetwork.mesh.MeshIterator
+import org.alexguldemond.pdenetwork.updater.Updater
+import org.alexguldemond.pdenetwork.network.{MultiIndex, WeightVector}
 
 import scala.collection.mutable.ListBuffer
 
 trait Model {
+
+  def weightVector: WeightVector
 
   def cost(input: DenseVector[Double]): Double = batchCost(input.asDenseMatrix.t)
 
@@ -21,17 +26,19 @@ trait Model {
 
   def data(input: DenseMatrix[Double]): Transpose[DenseVector[Double]]
 
-  def costGradient(input: DenseVector[Double]): WeightGradient = costGradientBatch(input.asDenseMatrix.t)
+  def costGradient(input: DenseVector[Double]): WeightVector = costGradientBatch(input.asDenseMatrix.t)
 
-  def costGradientBatch(input: DenseMatrix[Double]): WeightGradient
+  def costGradientBatch(input: DenseMatrix[Double]): WeightVector
 
-  def averageGradient(input: DenseMatrix[Double]): WeightGradient = costGradientBatch(input) / input.cols.toDouble
+  def averageGradient(input: DenseMatrix[Double]): WeightVector = costGradientBatch(input) / input.cols.toDouble
 
   def apply(input: DenseVector[Double]): Double
 
   def update(input: DenseMatrix[Double], updater: Updater): Unit = updater.updateModel(this, input)
 
-  def updateWeights(weightGradient: WeightGradient): Unit
+  def updateWeights(weightGradient: WeightVector): Unit
+
+  def updateWeights(weightVector: DenseVector[Double]): Unit
 
   def fit(iter: MeshIterator, updater: Updater): Unit = {
     while (iter.hasNext) {
@@ -41,7 +48,7 @@ trait Model {
   }
 
   def fit(iter: MeshIterator, reportFrequency: Int, updater: Updater): ListBuffer[Double] = {
-    var counter = 1
+    var counter = 0
     var report: ListBuffer[Double] = new ListBuffer[Double]()
     while (iter.hasNext) {
       val batch = iter.nextBatch

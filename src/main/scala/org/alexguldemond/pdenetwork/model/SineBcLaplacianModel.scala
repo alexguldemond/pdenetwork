@@ -1,7 +1,9 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.model
+
 import breeze.linalg.{DenseMatrix, DenseVector, Transpose}
-import breeze.numerics.sin
 import breeze.numerics.constants.Pi
+import breeze.numerics.sin
+import org.alexguldemond.pdenetwork.network.SimpleNetwork
 
 case class SineBcLaplacianModel(simpleNetwork: SimpleNetwork) extends SimpleLaplacianModel(simpleNetwork) {
   import SineBcLaplacianModel._
@@ -18,7 +20,9 @@ case class SineBcLaplacianModel(simpleNetwork: SimpleNetwork) extends SimpleLapl
     x2 *:* sin(x1*Pi)*minusPiSquared
   }
 
-  override def data(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] = DenseVector.zeros[Double](input.cols).t
+  override def data(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] = {
+    DenseVector.zeros[Double](input.cols).t
+  }
 }
 
 object SineBcLaplacianModel {

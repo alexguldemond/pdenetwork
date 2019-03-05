@@ -1,4 +1,4 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.mesh
 
 import breeze.linalg.{DenseMatrix, DenseVector}
 
@@ -6,7 +6,7 @@ import scala.util.Random
 
 case class Uniform2DMesh(delta: Double) extends Mesh {
 
-  lazy val numberOfPoints = (1d/delta).floor.toInt
+  override lazy val numberOfPoints = (1d/delta).floor.toInt
 
   class Uniform2DMeshIterator(batchSize: Int) extends MeshIterator {
 

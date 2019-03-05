@@ -1,7 +1,8 @@
 import breeze.linalg.{DenseMatrix, DenseVector, sum}
 import breeze.numerics.constants.Pi
 import breeze.numerics.sin
-import org.alexguldemond.pdenetwork.{SimpleNetwork, SineBcLaplacianModel, WeightGradient}
+import org.alexguldemond.pdenetwork.network.{SimpleNetwork, WeightVector}
+import org.alexguldemond.pdenetwork.model.SineBcLaplacianModel
 import org.scalatest.{FlatSpec, Matchers}
 
 class SineBcLaplacianModelTest extends FlatSpec with Matchers {
@@ -11,7 +12,7 @@ class SineBcLaplacianModelTest extends FlatSpec with Matchers {
     val b = DenseVector(.6,.3)
     val v = DenseVector(1d, .25)
 
-    val net = SimpleNetwork(w,b,v)
+    val net = SimpleNetwork(WeightVector(w,b,v))
     val x = DenseVector(2d,3d)
 
     val result = 3d * sin(Pi * 2d) + 2d*(2d - 1d)*3d*(3d - 1d) * net(x)
@@ -26,7 +27,7 @@ class SineBcLaplacianModelTest extends FlatSpec with Matchers {
     val b = DenseVector(.6,.3)
     val v = DenseVector(1d, .25)
 
-    val net = SimpleNetwork(w,b,v)
+    val net = SimpleNetwork(WeightVector(w,b,v))
     val x1 = DenseVector(2d,3d)
     val x2 = DenseVector(3d,2d)
     val x = DenseMatrix(x1,x2).t
@@ -45,7 +46,7 @@ class SineBcLaplacianModelTest extends FlatSpec with Matchers {
     val b = DenseVector(.6,.3)
     val v = DenseVector(1d, .25)
 
-    val net = SimpleNetwork(w,b,v)
+    val net = SimpleNetwork(WeightVector(w,b,v))
     val x1 = DenseVector(2d,3d)
     val x2 = DenseVector(3d,2d)
     val x = DenseMatrix(x1,x2).t
@@ -62,7 +63,7 @@ class SineBcLaplacianModelTest extends FlatSpec with Matchers {
     val b = DenseVector(.6,.3)
     val v = DenseVector(1d, .25)
 
-    val net = SimpleNetwork(w,b,v)
+    val net = SimpleNetwork(WeightVector(w,b,v))
     val x1 = DenseVector(2d,3d)
     val x2 = DenseVector(3d,4d)
     val x = DenseMatrix(x1,x2).t
@@ -72,7 +73,7 @@ class SineBcLaplacianModelTest extends FlatSpec with Matchers {
     val grad2 = model.costGradient(x2)
     val grad = model.costGradientBatch(x)
 
-    val result1 = WeightGradient(DenseMatrix((-5.5541950018046204, -11.83262019637254),
+    val result1 = WeightVector(DenseMatrix((-5.5541950018046204, -11.83262019637254),
       (6.55599755831139,0.6142978287741843)),
       DenseVector(-4.852483926822638, -0.05951938292162779),
       DenseVector(328.9224358903274, 324.346503037764))

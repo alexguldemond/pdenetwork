@@ -1,11 +1,13 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.network
 
 import breeze.linalg.{DenseMatrix, DenseVector, Transpose}
 
 trait Network extends NetworkDerivative {
   def inputDerivative(multiIndex: MultiIndex) : NetworkDerivative
 
-  def updateWeights(weightGradient: WeightGradient): Network
+  def updateWeights(weightGradient: WeightVector): Network
+
+  def weightVector: WeightVector
 }
 
 trait NetworkDerivative {
@@ -13,7 +15,7 @@ trait NetworkDerivative {
 
   def applyBatch(input: DenseMatrix[Double]): Transpose[DenseVector[Double]]
 
-  def weightGradient(input: DenseVector[Double]) : WeightGradient
+  def weightGradient(input: DenseVector[Double]) : WeightVector
 
   def weightGradientBatch(input: DenseMatrix[Double]) : WeightGradientBatch
 }

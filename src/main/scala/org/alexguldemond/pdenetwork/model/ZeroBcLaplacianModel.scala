@@ -1,12 +1,12 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.model
 
 import breeze.linalg.{DenseMatrix, DenseVector, Transpose}
+import org.alexguldemond.pdenetwork.network.SimpleNetwork
 
-case class GaussianLaplacianModel(simpleNetwork: SimpleNetwork) extends SimpleLaplacianModel(simpleNetwork) {
+abstract class ZeroBcLaplacianModel(simpleNetwork: SimpleNetwork) extends SimpleLaplacianModel(simpleNetwork) {
   override def bcSatisfier(input: DenseVector[Double]): Double = 0d
 
   override def diffOpBcSatisfier(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] =
     DenseVector.zeros[Double](input.cols).t
 
-  override def data(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] = DenseVector.fill(input.cols, 1d).t
 }

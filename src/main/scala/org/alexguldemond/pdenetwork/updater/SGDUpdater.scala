@@ -1,5 +1,7 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.updater
+
 import breeze.linalg.DenseMatrix
+import org.alexguldemond.pdenetwork.model.Model
 
 case class SGDUpdater(learningRate: Double) extends Updater {
   override def updateModel(model: Model, input: DenseMatrix[Double]): Model = {

@@ -1,6 +1,6 @@
 import breeze.linalg._
-import org.alexguldemond.pdenetwork.SigmoidDerivatives.sigmoidThirdDerivative
-import org.alexguldemond.pdenetwork.{MultiIndex, SimpleDerivative, SimpleNetwork}
+import org.alexguldemond.pdenetwork.activation.SigmoidDerivatives.sigmoidThirdDerivative
+import org.alexguldemond.pdenetwork.network.{MultiIndex, SimpleDerivative, SimpleNetwork, WeightVector}
 import org.scalatest.{FlatSpec, Matchers}
 
 class SimpleDerivativeTest extends FlatSpec with Matchers{
@@ -23,7 +23,7 @@ class SimpleDerivativeTest extends FlatSpec with Matchers{
     val innerBias = DenseVector(.5, 1.0)
     val outerWeights = DenseVector(1.0, .5)
 
-    val simpleNetwork: SimpleNetwork = SimpleNetwork(innerWeights, innerBias, outerWeights)
+    val simpleNetwork: SimpleNetwork = SimpleNetwork(WeightVector(innerWeights, innerBias, outerWeights))
     val multiIndex: MultiIndex = MultiIndex(Array(2,1))
 
     val simpleDerivative = SimpleDerivative(simpleNetwork, multiIndex)
@@ -48,15 +48,15 @@ class SimpleDerivativeTest extends FlatSpec with Matchers{
     val outerWeights = DenseVector(1.0, .5)
     val x = DenseVector(.5d, .5d)
 
-    val simpleNetwork: SimpleNetwork = SimpleNetwork(innerWeights, innerBias, outerWeights)
+    val simpleNetwork: SimpleNetwork = SimpleNetwork(WeightVector(innerWeights, innerBias, outerWeights))
     val multiIndex: MultiIndex = MultiIndex(Array(2,1))
 
     val simpleDerivative = SimpleDerivative(simpleNetwork, multiIndex)
     val grad = simpleDerivative.weightGradient(x)
-    grad.outerWeightGradient should be (DenseVector(0.004046300496763141, 3.371917080635951E-4))
-    grad.innerBiasGradient should be (DenseVector(0.06722375388622398, 0.0028009897452593324))
+    grad.outerWeight should be (DenseVector(0.004046300496763141, 3.371917080635951E-4))
+    grad.innerBias should be (DenseVector(0.06722375388622398, 0.0028009897452593324))
 
-    grad.innerWeightGradient should be (DenseMatrix((0.04170447793663827,0.039006944272129515),
+    grad.innerWeights should be (DenseMatrix((0.04170447793663827,0.039006944272129515),
                                                     (0.0020748782887568566, 0.0020748782887568566)))
   }
 
@@ -66,11 +66,11 @@ class SimpleDerivativeTest extends FlatSpec with Matchers{
     val outerWeights = DenseVector(1.0, .5)
     val x = DenseVector(.5d, .5d)
 
-    val simpleNetwork: SimpleNetwork = SimpleNetwork(innerWeights, innerBias, outerWeights)
+    val simpleNetwork: SimpleNetwork = SimpleNetwork(WeightVector(innerWeights, innerBias, outerWeights))
     val multiIndex: MultiIndex = MultiIndex(Array(2,0))
     val simpleDerivative = SimpleDerivative(simpleNetwork, multiIndex)
     val grad = simpleDerivative.weightGradient(x)
-    val result = grad.innerWeightGradient(::,1)
+    val result = grad.innerWeights(::,1)
     result should be (DenseVector(0.0, 0.0))
   }
 
@@ -82,7 +82,7 @@ class SimpleDerivativeTest extends FlatSpec with Matchers{
     val x1 = DenseVector(.5,.5)
     val x2 = DenseVector(.75,.25)
 
-    val simpleNetwork: SimpleNetwork = SimpleNetwork(innerWeights, innerBias, outerWeights)
+    val simpleNetwork: SimpleNetwork = SimpleNetwork(WeightVector(innerWeights, innerBias, outerWeights))
     val multiIndex: MultiIndex = MultiIndex(Array(2,1))
 
     val simpleDerivative = SimpleDerivative(simpleNetwork, multiIndex)
@@ -91,9 +91,9 @@ class SimpleDerivativeTest extends FlatSpec with Matchers{
     val grad1 = simpleDerivative.weightGradient(x1)
     val grad2 = simpleDerivative.weightGradient(x2)
 
-    grad.outerWeightGradients should be (DenseMatrix(grad1.outerWeightGradient, grad2.outerWeightGradient).t)
-    grad.innerBiasGradients should be (DenseMatrix(grad1.innerBiasGradient, grad2.innerBiasGradient).t)
-    grad.innerWeightGradients should be (Seq(grad1.innerWeightGradient, grad2.innerWeightGradient))
+    grad.outerWeightGradients should be (DenseMatrix(grad1.outerWeight, grad2.outerWeight).t)
+    grad.innerBiasGradients should be (DenseMatrix(grad1.innerBias, grad2.innerBias).t)
+    grad.innerWeightGradients should be (Seq(grad1.innerWeights, grad2.innerWeights))
 
   }
 }

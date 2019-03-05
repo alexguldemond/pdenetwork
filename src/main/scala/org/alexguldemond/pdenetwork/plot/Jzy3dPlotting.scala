@@ -1,6 +1,7 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.plot
 
 import breeze.linalg.DenseVector
+import org.alexguldemond.pdenetwork.model.Model
 import org.jzy3d.chart.AWTChart
 import org.jzy3d.colors.colormaps.ColorMapRainbow
 import org.jzy3d.colors.{Color, ColorMapper}

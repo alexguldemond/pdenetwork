@@ -1,4 +1,4 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.network
 
 import breeze.linalg.DenseVector
 

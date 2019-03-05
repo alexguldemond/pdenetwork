@@ -1,4 +1,4 @@
-package org.alexguldemond.pdenetwork
+package org.alexguldemond.pdenetwork.plot
 
 trait Plot[-A] {
   def plot(title: String, a: A): Unit
