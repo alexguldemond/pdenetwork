@@ -1,6 +1,7 @@
 package org.alexguldemond.pdenetwork.network
 
 import breeze.linalg.{DenseMatrix, DenseVector, Transpose}
+import org.alexguldemond.pdenetwork.activation.Activation
 
 trait Network extends NetworkDerivative {
   def inputDerivative(multiIndex: MultiIndex) : NetworkDerivative
@@ -8,6 +9,8 @@ trait Network extends NetworkDerivative {
   def updateWeights(weightGradient: WeightVector): Network
 
   def weightVector: WeightVector
+
+  def activation: Activation
 }
 
 trait NetworkDerivative {

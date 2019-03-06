@@ -7,9 +7,9 @@ import org.alexguldemond.pdenetwork.model.Model
 case class AdamUpdater(learningRate: Double ,
                        moment1DecayRate: Double = 0.9,
                        moment2DecayRate: Double = 0.999,
-                       epsilon: Double = 1.0E-8) extends Updater{
+                       epsilon: Double = 1.0E-8) extends StochasticUpdater{
 
-  private var timeStep = 0d
+  private var timeStep = 0
 
   //TODO: Change to a cats State
   private var moment1: DenseVector[Double] = DenseVector(0d)

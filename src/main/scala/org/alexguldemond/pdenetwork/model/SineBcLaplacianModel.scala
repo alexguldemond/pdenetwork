@@ -3,7 +3,7 @@ package org.alexguldemond.pdenetwork.model
 import breeze.linalg.{DenseMatrix, DenseVector, Transpose}
 import breeze.numerics.constants.Pi
 import breeze.numerics.sin
-import org.alexguldemond.pdenetwork.network.SimpleNetwork
+import org.alexguldemond.pdenetwork.network.{SimpleNetwork, WeightVector}
 
 case class SineBcLaplacianModel(simpleNetwork: SimpleNetwork) extends SimpleLaplacianModel(simpleNetwork) {
   import SineBcLaplacianModel._
@@ -22,6 +22,14 @@ case class SineBcLaplacianModel(simpleNetwork: SimpleNetwork) extends SimpleLapl
 
   override def data(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] = {
     DenseVector.zeros[Double](input.cols).t
+  }
+
+  override def copyArchitecture(weightVector: DenseVector[Double]): Model = {
+    val newNetwork = SimpleNetwork(
+      WeightVector.vecToWeightGrad(weightVector, 2, simpleNetwork.innerWeights.rows),
+      simpleNetwork.activation)
+
+    SineBcLaplacianModel(newNetwork)
   }
 }
 

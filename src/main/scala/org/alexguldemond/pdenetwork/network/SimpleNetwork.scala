@@ -3,9 +3,10 @@ package org.alexguldemond.pdenetwork.network
 import breeze.linalg._
 import breeze.numerics._
 import breeze.stats.distributions.{Gaussian => G}
+import org.alexguldemond.pdenetwork.activation.{Activation, Sigmoid}
 import org.alexguldemond.pdenetwork.activation.SigmoidDerivatives._
 
-case class SimpleNetwork(weightVector: WeightVector) extends Network {
+case class SimpleNetwork(weightVector: WeightVector, activation: Activation = Sigmoid) extends Network {
 
   def innerWeights = weightVector.innerWeights
 
@@ -61,29 +62,11 @@ case class SimpleNetwork(weightVector: WeightVector) extends Network {
 }
 
 object SimpleNetwork {
-  def getDerivative(i: Int, input: DenseVector[Double]): DenseVector[Double] = i match {
-    case 0 => sigmoid(input)
-    case 1 => sigmoidFirstDerivative(input)
-    case 2 => sigmoidSecondDerivative(input)
-    case 3 => sigmoidThirdDerivative(input)
-    case 4 => sigmoidFourthDerivative(input)
-    case _ => throw new IllegalArgumentException("Higher derivatives not implemented")
-  }
-
-  def getDerivative(i: Int, input: DenseMatrix[Double]): DenseMatrix[Double] = i match {
-    case 0 => sigmoid(input)
-    case 1 => sigmoidFirstDerivative(input)
-    case 2 => sigmoidSecondDerivative(input)
-    case 3 => sigmoidThirdDerivative(input)
-    case 4 => sigmoidFourthDerivative(input)
-    case _ => throw new IllegalArgumentException("Higher derivatives not implemented")
-  }
-
-  def randomNetwork(inputSize: Int, hiddenLayerSize: Int, testSize: Int = 1): SimpleNetwork = {
+  def randomNetwork(inputSize: Int, hiddenLayerSize: Int, testSize: Int = 1, activation: Activation = Sigmoid): SimpleNetwork = {
     val normal = G(0,1/sqrt(testSize))
     val w = DenseMatrix.rand(hiddenLayerSize, inputSize, normal)
     val v = DenseVector.rand(hiddenLayerSize, normal)
     val b = DenseVector.rand(hiddenLayerSize, normal)
-    SimpleNetwork(WeightVector(w, b, v))
+    SimpleNetwork(WeightVector(w, b, v), activation)
   }
 }

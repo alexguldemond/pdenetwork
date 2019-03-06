@@ -1,44 +1,39 @@
 package org.alexguldemond.pdenetwork.activation
+import breeze.linalg.{DenseMatrix, DenseVector}
+import breeze.numerics.sigmoid
+import org.alexguldemond.pdenetwork.activation.SigmoidDerivatives.{sigmoidFirstDerivative, sigmoidFourthDerivative, sigmoidSecondDerivative, sigmoidThirdDerivative}
 
-import breeze.generic.{MappingUFunc, UFunc}
-import breeze.numerics.{exp, pow, sigmoid}
+object Sigmoid extends Activation {
+  override def apply(x: Double): Double = sigmoid(x)
 
-object SigmoidDerivatives {
+  override def apply(x: DenseVector[Double]): DenseVector[Double] = sigmoid(x)
 
-  object sigmoidFirstDerivative extends UFunc with MappingUFunc {
-    implicit object sigmoidImplDouble extends Impl[Double, Double] {
-      def apply(x:Double): Double = {
-        val sigma = sigmoid(x)
-        sigma*(1 - sigma)
-      }
-    }
+  override def apply(x: DenseMatrix[Double]): DenseMatrix[Double] = sigmoid(x)
+
+  override def derivative(n: Int, x: Double): Double = n match {
+    case 0 => sigmoid(x)
+    case 1 => sigmoidFirstDerivative(x)
+    case 2 => sigmoidSecondDerivative(x)
+    case 3 => sigmoidThirdDerivative(x)
+    case 4 => sigmoidFourthDerivative(x)
+    case _ => throw new IllegalArgumentException("Higher derivatives not implemented")
   }
 
-  object sigmoidSecondDerivative extends UFunc with MappingUFunc {
-    implicit object sigmoidImplDouble extends Impl[Double, Double] {
-      def apply(x:Double): Double = {
-        val sigma = sigmoid(x)
-        sigma*(1 - sigma)*(1-2*sigma)
-      }
-    }
+  override def derivative(n: Int, x: DenseVector[Double]): DenseVector[Double] = n match {
+    case 0 => sigmoid(x)
+    case 1 => sigmoidFirstDerivative(x)
+    case 2 => sigmoidSecondDerivative(x)
+    case 3 => sigmoidThirdDerivative(x)
+    case 4 => sigmoidFourthDerivative(x)
+    case _ => throw new IllegalArgumentException("Higher derivatives not implemented")
   }
 
-  object sigmoidThirdDerivative extends UFunc with MappingUFunc {
-    implicit object sigmoidImplDouble extends Impl[Double, Double] {
-      def apply(x:Double): Double = {
-        val sigma = sigmoid(x)
-        sigma*(1 - sigma)*(1 - 6*sigma + 6*sigma*sigma)
-      }
-    }
+  override def derivative(n: Int, x: DenseMatrix[Double]): DenseMatrix[Double] = n match {
+    case 0 => sigmoid(x)
+    case 1 => sigmoidFirstDerivative(x)
+    case 2 => sigmoidSecondDerivative(x)
+    case 3 => sigmoidThirdDerivative(x)
+    case 4 => sigmoidFourthDerivative(x)
+    case _ => throw new IllegalArgumentException("Higher derivatives not implemented")
   }
-
-  object sigmoidFourthDerivative extends UFunc with MappingUFunc {
-    implicit object sigmoidImplDouble extends Impl[Double, Double] {
-      def apply(x:Double): Double = {
-        val ex = exp(x)
-        -ex * (-1 + 11*ex -11*ex*ex + ex*ex*ex)/(pow(1 + ex, 5))
-      }
-    }
-  }
-
 }

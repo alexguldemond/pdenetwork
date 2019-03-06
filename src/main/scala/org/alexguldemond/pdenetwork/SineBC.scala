@@ -32,8 +32,7 @@ object SineBC extends App {
 
   time {
     for (i <- 1 to epochs) {
-      val iter = mesh.iterator(batchSize)
-      report ++= model.fit(iter, reportFrequency, AdamUpdater(0.01))
+      report ++= model.fit(mesh, batchSize,reportFrequency, AdamUpdater(0.01))
       println(s"Epoch $i complete")
     }
   }

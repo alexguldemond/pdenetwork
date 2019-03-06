@@ -1,9 +1,10 @@
 package org.alexguldemond.pdenetwork.network
 
 import breeze.linalg._
-import org.alexguldemond.pdenetwork._
 
-case class SimpleDerivative(simpleNetwork: SimpleNetwork, multiIndex: MultiIndex) extends NetworkDerivative {
+case class SimpleDerivative(simpleNetwork: SimpleNetwork, multiIndex: MultiIndex)
+  extends NetworkDerivative {
+
   import simpleNetwork.{hiddenPreOutput, hiddenPreOutputBatch}
 
   val weightModifier: DenseVector[Double] = SimpleDerivative.matrixVectorPowerProduct(W, multiIndex.asVector)
@@ -11,6 +12,8 @@ case class SimpleDerivative(simpleNetwork: SimpleNetwork, multiIndex: MultiIndex
   val modifiedOuterWeight: DenseVector[Double] = simpleNetwork.outerWeights *:* weightModifier
 
   private[this] def W: DenseMatrix[Double] = simpleNetwork.innerWeights
+
+  private[this] def activation = simpleNetwork.activation
 
   val innerWeightGradMod: DenseMatrix[Double] = {
     val mat = DenseMatrix.zeros[Double](W.rows, W.cols)
@@ -27,18 +30,18 @@ case class SimpleDerivative(simpleNetwork: SimpleNetwork, multiIndex: MultiIndex
   }
 
   override def apply(input: DenseVector[Double]): Double =
-    modifiedOuterWeight dot SimpleNetwork.getDerivative(multiIndex.total, hiddenPreOutput(input))
+    modifiedOuterWeight dot activation.derivative(multiIndex.total, hiddenPreOutput(input))
 
   override def applyBatch(input: DenseMatrix[Double]): Transpose[DenseVector[Double]] =
-    modifiedOuterWeight.t * SimpleNetwork.getDerivative(multiIndex.total, hiddenPreOutputBatch(input))
+    modifiedOuterWeight.t * activation.derivative(multiIndex.total, hiddenPreOutputBatch(input))
 
   override def weightGradient(input: DenseVector[Double]) : WeightVector = {
     val preOutput = hiddenPreOutput(input)
 
-    val sigma = SimpleNetwork.getDerivative(multiIndex.total, preOutput)
+    val sigma = activation.derivative(multiIndex.total, preOutput)
 
     val outerWeightGrad = weightModifier *:* sigma
-    val innerBiasGrad = modifiedOuterWeight *:* SimpleNetwork.getDerivative(multiIndex.total + 1, preOutput)
+    val innerBiasGrad = modifiedOuterWeight *:* activation.derivative(multiIndex.total + 1, preOutput)
 
     val v = simpleNetwork.outerWeights
 
@@ -50,11 +53,11 @@ case class SimpleDerivative(simpleNetwork: SimpleNetwork, multiIndex: MultiIndex
   override def weightGradientBatch(input: DenseMatrix[Double]): WeightGradientBatch = {
 
     val preOutput = hiddenPreOutputBatch(input)
-    val sigma = SimpleNetwork.getDerivative(multiIndex.total, preOutput)
+    val sigma = activation.derivative(multiIndex.total, preOutput)
 
     val outerWeightGradMat = sigma(::, *) *:* weightModifier
 
-    val innerBiasGradMat = SimpleNetwork.getDerivative(multiIndex.total + 1, preOutput)
+    val innerBiasGradMat = activation.derivative(multiIndex.total + 1, preOutput)
     innerBiasGradMat := innerBiasGradMat(::, *) *:* modifiedOuterWeight
 
     val v = simpleNetwork.outerWeights

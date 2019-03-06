@@ -18,11 +18,14 @@ libraryDependencies += "org.jzy3d" % "jzy3d-api" % "1.0.2"
 // https://mvnrepository.com/artifact/org.scalanlp/breeze-viz
 libraryDependencies += "org.scalanlp" %% "breeze-viz" % "1.0-RC2"
 
-// https://mvnrepository.com/artifact/com.typesafe.scala-logging/scala-logging
-libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.26"
 
 // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3" % Test
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
+
+// https://mvnrepository.com/artifact/ch.qos.logback/logback-core
+libraryDependencies += "ch.qos.logback" % "logback-core" % "1.2.3"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.0-SNAP10" % Test
 

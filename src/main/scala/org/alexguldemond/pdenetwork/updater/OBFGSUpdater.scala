@@ -2,7 +2,7 @@ package org.alexguldemond.pdenetwork.updater
 import breeze.linalg.DenseMatrix
 import org.alexguldemond.pdenetwork.model.Model
 
-case class BFGSUpdater(eta0: Double, tau: Double ,lambda: Double, c: Double = .1, initialHessian: Double = 1.0E-8) extends Updater {
+case class OBFGSUpdater(eta0: Double, tau: Double, lambda: Double, c: Double = .1, initialHessian: Double = 1.0E-8) extends StochasticUpdater {
 
   private var timeStep = 0
 

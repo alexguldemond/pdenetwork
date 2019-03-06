@@ -1,13 +1,15 @@
 package org.alexguldemond.pdenetwork.model
 
 import breeze.linalg._
-import org.alexguldemond.pdenetwork.mesh.MeshIterator
-import org.alexguldemond.pdenetwork.updater.Updater
+import org.alexguldemond.pdenetwork.mesh.Mesh
 import org.alexguldemond.pdenetwork.network.{MultiIndex, WeightVector}
+import org.alexguldemond.pdenetwork.updater.{FullUpdater, StochasticUpdater, Updater}
 
 import scala.collection.mutable.ListBuffer
 
 trait Model {
+
+  def copyArchitecture(weightVector : DenseVector[Double]): Model
 
   def weightVector: WeightVector
 
@@ -34,22 +36,16 @@ trait Model {
 
   def apply(input: DenseVector[Double]): Double
 
-  def update(input: DenseMatrix[Double], updater: Updater): Unit = updater.updateModel(this, input)
+  def update(input: DenseMatrix[Double], updater: Updater): Model = updater.updateModel(this, input)
 
   def updateWeights(weightGradient: WeightVector): Unit
 
   def updateWeights(weightVector: DenseVector[Double]): Unit
 
-  def fit(iter: MeshIterator, updater: Updater): Unit = {
-    while (iter.hasNext) {
-      val batch = iter.nextBatch
-      update(batch, updater)
-    }
-  }
-
-  def fit(iter: MeshIterator, reportFrequency: Int, updater: Updater): ListBuffer[Double] = {
+  def fit(mesh: Mesh, batchSize: Int, reportFrequency: Int, updater: StochasticUpdater): ListBuffer[Double] = {
     var counter = 0
     var report: ListBuffer[Double] = new ListBuffer[Double]()
+    val iter = mesh.iterator(batchSize)
     while (iter.hasNext) {
       val batch = iter.nextBatch
       if (counter % reportFrequency == 0) {
@@ -59,6 +55,12 @@ trait Model {
       counter = counter + 1
     }
     report
+  }
+
+  def fit(mesh: Mesh, updater: FullUpdater): Double = {
+    val dataPoints = mesh.allPoints
+    update(dataPoints, updater)
+    averageCost(dataPoints)
   }
 }
 
